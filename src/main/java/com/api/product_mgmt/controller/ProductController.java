@@ -66,6 +66,35 @@ public class ProductController extends BaseResponse {
     @DeleteMapping("/{product-id}")
     public ResponseEntity<ApiResponse<Product>> deleteProduct(@PathVariable("product-id") UUID productId) {
         Product deletedProduct = productService.delete(productId);
-        return responseEntity("Deleted product with ID: `" + productId + "` successfully", HttpStatus.OK, deletedProduct);
+        return responseEntity("Deleted product with ID: `" + productId + "` successfully", HttpStatus.OK,
+                deletedProduct);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<PagedResponseList<Product>>> searchProductByName(
+            @RequestParam String name,
+            @RequestParam(defaultValue = "1") @Positive Integer page,
+            @RequestParam(defaultValue = "10") @Positive Integer size) {
+
+        PagedResponseList<Product> productList = productService.findByName(name, page, size);
+        String message = "Find product by name successfully";
+        if (productList.getItems().isEmpty()) {
+            message = "No Record Found";
+        }
+        return responseEntity(message, HttpStatus.OK, productList);
+    }
+
+    @GetMapping("/low-stock")
+    public ResponseEntity<ApiResponse<PagedResponseList<Product>>> searchProductWithLowerQuantity(
+            @RequestParam @Positive Integer quantity,
+            @RequestParam(defaultValue = "1") @Positive Integer page,
+            @RequestParam(defaultValue = "10") @Positive Integer size) {
+        
+        PagedResponseList<Product> productList = productService.findByLowerQuantity(quantity, page, size);
+        String message = "Find product with lower quantity successfully";
+        if (productList.getItems().isEmpty()) {
+            message = "No Record Found";
+        }
+        return responseEntity(message, HttpStatus.OK, productList);
     }
 }

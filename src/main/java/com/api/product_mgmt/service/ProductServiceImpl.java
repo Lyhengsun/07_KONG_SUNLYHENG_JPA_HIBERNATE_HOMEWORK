@@ -56,4 +56,18 @@ public class ProductServiceImpl implements ProductService {
         return new PagedResponseList<>(products, paginationInfo);
     }
 
+    @Override
+    public PagedResponseList<Product> findByName(String searchName, Integer page, Integer size) {
+        Integer offset = (page - 1) * size;
+        List<Product> products = productRepository.findByName(searchName, offset, size);
+        PaginationInfo paginationInfo = new PaginationInfo(page, size, productRepository.countAllProductByName(searchName));
+        return new PagedResponseList<>(products, paginationInfo);
+    }
+
+    @Override
+    public PagedResponseList<Product> findByLowerQuantity(Integer quantity, Integer page, Integer size) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findByLowerQuantity'");
+    }
+
 }

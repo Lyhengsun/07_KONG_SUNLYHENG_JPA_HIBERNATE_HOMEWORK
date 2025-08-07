@@ -11,6 +11,7 @@ import com.api.product_mgmt.model.Product;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 
 @Repository
 @Transactional
@@ -58,6 +59,23 @@ public class ProductRepository {
 
     public Integer countAllProducts() {
         Long productCount = em.createQuery("SELECT COUNT(p.id) FROM products p", Long.class).getSingleResult();
+        return productCount.intValue();
+    }
+
+    public List<Product> findByName(String searchName, Integer offset, Integer limit) {
+        TypedQuery<Product> query = em
+                .createQuery("SELECT p FROM products p WHERE p.name LIKE CONCAT('%',:searchKeyword,'%')", Product.class)
+                .setFirstResult(offset).setMaxResults(limit);
+        query.setParameter("searchKeyword", searchName);
+        return query.getResultList();
+    }
+
+    public Integer countAllProductByName(String searchName) {
+        Long productCount = em
+                .createQuery("SELECT COUNT(p.id) FROM products p WHERE p.name LIKE CONCAT('%',:searchKeyword,'%')",
+                        Long.class)
+                .setParameter("searchKeyword", searchName)
+                .getSingleResult();
         return productCount.intValue();
     }
 }

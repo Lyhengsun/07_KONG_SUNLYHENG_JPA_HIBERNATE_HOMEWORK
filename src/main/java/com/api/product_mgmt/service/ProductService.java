@@ -6,8 +6,6 @@ import com.api.product_mgmt.dto.request.ProductRequest;
 import com.api.product_mgmt.dto.response.PagedResponseList;
 import com.api.product_mgmt.model.Product;
 
-import jakarta.validation.constraints.Positive;
-
 public interface ProductService {
 
     Product findById(UUID productId);
@@ -19,4 +17,6 @@ public interface ProductService {
     Product delete(UUID productId);
 
     PagedResponseList<Product> findAll(Integer page, Integer size);
+
+    PagedResponseList<Product> findByName(String searchName, Integer page, Integer size);
 }
