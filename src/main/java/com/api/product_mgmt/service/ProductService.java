@@ -19,4 +19,7 @@ public interface ProductService {
     PagedResponseList<Product> findAll(Integer page, Integer size);
 
     PagedResponseList<Product> findByName(String searchName, Integer page, Integer size);
+
+    PagedResponseList<Product> findByLowerQuantity(Integer quantity, Integer page,
+            Integer size);
 }
