@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:14.18
+    container_name: product-mgmt-db-container
+    environment:
+      POSTGRES_DB: product_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+    ports:
+      - 5433:5432
+    volumes:
+      - "product_mgmt_data:/var/lib/postgresql/data"
+    networks:
+      - product_mgmt_network
+  
+  # backend:
+  #   build: .
+  #   container_name: product-mgmt-backend-container
+  #   environment:
+  #     SPRING_DATASOURCE_URL: jdbc:postgresql://product-mgmt-db-container:5432/postgres
+  #     SPRING_DATASOURCE_USERNAME: postgres
+  #     SPRING_DATASOURCE_PASSWORD: 123
+  #   ports:
+  #     - 8081:8080
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - product_mgmt_network
+
+networks:
+  product_mgmt_network:
+    driver: bridge
+
+volumes:
+  product_mgmt_data:
