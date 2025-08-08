@@ -78,4 +78,17 @@ public class ProductRepository {
                 .getSingleResult();
         return productCount.intValue();
     }
+
+    public List<Product> findByLowerQuantity(Integer quantity, Integer offset, Integer limit) {
+        List<Product> products = em.createQuery("SELECT p FROM products p WHERE p.quantity <= :quantity", Product.class)
+                .setParameter("quantity", quantity).getResultList();
+        return products;
+    }
+
+    public Integer countAllProductByLowerQuantity(Integer quantity) {
+        Long productCount = em
+                .createQuery("SELECT COUNT(p.id) FROM products p WHERE p.quantity <= :quantity", Long.class)
+                .setParameter("quantity", quantity).getSingleResult();
+        return productCount.intValue();
+    }
 }

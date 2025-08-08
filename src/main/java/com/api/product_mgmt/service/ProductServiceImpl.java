@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.api.product_mgmt.dto.request.ProductRequest;
 import com.api.product_mgmt.dto.response.PagedResponseList;
 import com.api.product_mgmt.dto.response.PaginationInfo;
+import com.api.product_mgmt.exception.BadRequestException;
 import com.api.product_mgmt.model.Product;
 import com.api.product_mgmt.repository.ProductRepository;
 import com.api.product_mgmt.utils.ServiceValicationUtils;
@@ -29,6 +30,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product save(ProductRequest request) {
+        if (request.getQuantity().equals(0)) {
+            throw new BadRequestException("new products can't have zero quantity");
+        }
         return productRepository.save(request);
     }
 
@@ -60,14 +64,18 @@ public class ProductServiceImpl implements ProductService {
     public PagedResponseList<Product> findByName(String searchName, Integer page, Integer size) {
         Integer offset = (page - 1) * size;
         List<Product> products = productRepository.findByName(searchName, offset, size);
-        PaginationInfo paginationInfo = new PaginationInfo(page, size, productRepository.countAllProductByName(searchName));
+        PaginationInfo paginationInfo = new PaginationInfo(page, size,
+                productRepository.countAllProductByName(searchName));
         return new PagedResponseList<>(products, paginationInfo);
     }
 
     @Override
     public PagedResponseList<Product> findByLowerQuantity(Integer quantity, Integer page, Integer size) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findByLowerQuantity'");
+        Integer offset = (page - 1) * size;
+        List<Product> products = productRepository.findByLowerQuantity(quantity, offset, size);
+        PaginationInfo paginationInfo = new PaginationInfo(page, size,
+                productRepository.countAllProductByLowerQuantity(quantity));
+        return new PagedResponseList<>(products, paginationInfo);
     }
 
 }

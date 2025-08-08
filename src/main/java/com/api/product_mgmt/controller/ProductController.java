@@ -21,6 +21,7 @@ import com.api.product_mgmt.dto.response.PagedResponseList;
 import com.api.product_mgmt.model.Product;
 import com.api.product_mgmt.service.ProductService;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 
@@ -50,14 +51,14 @@ public class ProductController extends BaseResponse {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Product>> saveProduct(@RequestBody ProductRequest request) {
+    public ResponseEntity<ApiResponse<Product>> saveProduct(@Valid @RequestBody ProductRequest request) {
         Product savedProduct = productService.save(request);
         return responseEntity("Saved new product successfully", HttpStatus.CREATED, savedProduct);
     }
 
     @PutMapping("/{product-id}")
     public ResponseEntity<ApiResponse<Product>> updateProduct(@PathVariable("product-id") UUID productId,
-            @RequestBody ProductRequest request) {
+            @Valid @RequestBody ProductRequest request) {
         Product updatedProduct = productService.update(productId, request);
         return responseEntity("Updated product with ID: `" + productId + "` successfully", HttpStatus.OK,
                 updatedProduct);
