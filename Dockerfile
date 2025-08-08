@@ -2,14 +2,18 @@ FROM gradle:jdk21-ubi-minimal AS build
 
 WORKDIR /app
 
-# Copy necessary files and folder from project for building a jar file
+# Copy the Maven descriptor first (for dependency download optimizations)
+COPY gradlew .
 COPY gradle ./gradle
-COPY src ./src
 COPY settings.gradle .
 COPY build.gradle .
+COPY src ./src
 
-# run gradle command to make a jar file
-RUN gradle bootJar
+# Pre-download dependencies (without running full build)
+RUN ./gradlew dependencies --no-daemon || true
+
+# Build the application (skip tests if desired)
+RUN ./gradlew clean build -x test --no-daemon
 
 # ──────────────────────────────
 # 2) Runtime Stage

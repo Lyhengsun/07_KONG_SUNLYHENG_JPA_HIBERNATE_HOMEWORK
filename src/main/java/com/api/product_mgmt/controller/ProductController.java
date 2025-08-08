@@ -21,6 +21,7 @@ import com.api.product_mgmt.dto.response.PagedResponseList;
 import com.api.product_mgmt.model.Product;
 import com.api.product_mgmt.service.ProductService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class ProductController extends BaseResponse {
     private final ProductService productService;
 
     @GetMapping
+    @Operation(summary = "Get all products (paginated)", description = "Returns a paginated list of all products. Accepts page and size as query parameters.")
     public ResponseEntity<ApiResponse<PagedResponseList<Product>>> getAllProducts(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "10") @Positive Integer size) {
@@ -44,6 +46,7 @@ public class ProductController extends BaseResponse {
     }
 
     @GetMapping("/{product-id}")
+    @Operation(summary = "Get product by ID", description = "Fetches a product using its unique ID. Returns 404 if not found.")
     public ResponseEntity<ApiResponse<Product>> findProductById(
             @PathVariable("product-id") UUID productId) {
         Product foundProduct = productService.findById(productId);
@@ -51,12 +54,14 @@ public class ProductController extends BaseResponse {
     }
 
     @PostMapping
+    @Operation(summary = "Create a new product", description = "Accepts a product request payload and creates a new product. Returns the created product.")
     public ResponseEntity<ApiResponse<Product>> saveProduct(@Valid @RequestBody ProductRequest request) {
         Product savedProduct = productService.save(request);
         return responseEntity("Saved new product successfully", HttpStatus.CREATED, savedProduct);
     }
 
     @PutMapping("/{product-id}")
+    @Operation(summary = "Update product by ID", description = "Updates an existing product with the given ID using the request body. Returns the updated product.")
     public ResponseEntity<ApiResponse<Product>> updateProduct(@PathVariable("product-id") UUID productId,
             @Valid @RequestBody ProductRequest request) {
         Product updatedProduct = productService.update(productId, request);
@@ -65,6 +70,7 @@ public class ProductController extends BaseResponse {
     }
 
     @DeleteMapping("/{product-id}")
+    @Operation(summary = "Delete product by ID", description = "Deletes a product by its ID. Returns HTTP 200 if the product is successfully deleted.")
     public ResponseEntity<ApiResponse<Product>> deleteProduct(@PathVariable("product-id") UUID productId) {
         Product deletedProduct = productService.delete(productId);
         return responseEntity("Deleted product with ID: `" + productId + "` successfully", HttpStatus.OK,
@@ -72,6 +78,7 @@ public class ProductController extends BaseResponse {
     }
 
     @GetMapping("/search")
+    @Operation(summary = "Search products by name", description = "Returns a list of products that contain the given name (case-insensitive partial match).")
     public ResponseEntity<ApiResponse<PagedResponseList<Product>>> searchProductByName(
             @RequestParam String name,
             @RequestParam(defaultValue = "1") @Positive Integer page,
@@ -86,11 +93,12 @@ public class ProductController extends BaseResponse {
     }
 
     @GetMapping("/low-stock")
+    @Operation(summary = "Get low stock products", description = "Returns a list of products with quantity less than the specified threshold.")
     public ResponseEntity<ApiResponse<PagedResponseList<Product>>> searchProductWithLowerQuantity(
             @RequestParam @Positive Integer quantity,
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "10") @Positive Integer size) {
-        
+
         PagedResponseList<Product> productList = productService.findByLowerQuantity(quantity, page, size);
         String message = "Find product with lower quantity successfully";
         if (productList.getItems().isEmpty()) {

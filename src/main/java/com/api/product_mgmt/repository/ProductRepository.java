@@ -72,7 +72,7 @@ public class ProductRepository {
 
     public Integer countAllProductByName(String searchName) {
         Long productCount = em
-                .createQuery("SELECT COUNT(p.id) FROM products p WHERE p.name LIKE CONCAT('%',:searchKeyword,'%')",
+                .createQuery("SELECT COUNT(p.id) FROM products p WHERE p.name ILIKE CONCAT('%',:searchKeyword,'%')",
                         Long.class)
                 .setParameter("searchKeyword", searchName)
                 .getSingleResult();

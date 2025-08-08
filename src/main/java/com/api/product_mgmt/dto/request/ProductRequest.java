@@ -28,5 +28,6 @@ public class ProductRequest {
 
     @NotNull(message = "quantity is required")
     @PositiveOrZero(message = "price can't be a negative number")
+    @Digits(integer = 5, fraction = 0, message = "quantity can't be higher than 5 digits")
     private Integer quantity;
 }

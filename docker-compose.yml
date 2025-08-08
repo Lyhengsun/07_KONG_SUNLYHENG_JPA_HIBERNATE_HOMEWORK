@@ -13,19 +13,19 @@ services:
     networks:
       - product_mgmt_network
   
-  # backend:
-  #   build: .
-  #   container_name: product-mgmt-backend-container
-  #   environment:
-  #     SPRING_DATASOURCE_URL: jdbc:postgresql://product-mgmt-db-container:5432/postgres
-  #     SPRING_DATASOURCE_USERNAME: postgres
-  #     SPRING_DATASOURCE_PASSWORD: 123
-  #   ports:
-  #     - 8081:8080
-  #   depends_on:
-  #     - db
-  #   networks:
-  #     - product_mgmt_network
+  backend:
+    build: .
+    container_name: product-mgmt-backend-container
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://product-mgmt-db-container:5432/product_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 123
+    ports:
+      - 8081:8090
+    depends_on:
+      - db
+    networks:
+      - product_mgmt_network
 
 networks:
   product_mgmt_network:

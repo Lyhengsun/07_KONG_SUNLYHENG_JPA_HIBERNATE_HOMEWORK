@@ -11,7 +11,7 @@ import com.api.product_mgmt.dto.response.PaginationInfo;
 import com.api.product_mgmt.exception.BadRequestException;
 import com.api.product_mgmt.model.Product;
 import com.api.product_mgmt.repository.ProductRepository;
-import com.api.product_mgmt.utils.ServiceValicationUtils;
+import com.api.product_mgmt.utils.ServiceValidationUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,7 +23,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product findById(UUID productId) {
         Product foundProduct = productRepository.findById(productId);
-        ServiceValicationUtils.notFoundValidation(foundProduct == null,
+        ServiceValidationUtils.notFoundValidation(foundProduct == null,
                 "Product with ID: `" + productId + "` doesn't exist");
         return foundProduct;
     }
@@ -39,7 +39,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product update(UUID productId, ProductRequest request) {
         Product foundProduct = productRepository.findById(productId);
-        ServiceValicationUtils.notFoundValidation(foundProduct == null,
+        ServiceValidationUtils.notFoundValidation(foundProduct == null,
                 "Product with ID: `" + productId + "` doesn't exist");
         return productRepository.update(productId, request);
     }
@@ -47,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product delete(UUID productId) {
         Product foundProduct = productRepository.findById(productId);
-        ServiceValicationUtils.notFoundValidation(foundProduct == null,
+        ServiceValidationUtils.notFoundValidation(foundProduct == null,
                 "Product with ID: `" + productId + "` doesn't exist");
         return productRepository.delete(productId);
     }
